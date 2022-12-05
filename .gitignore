@@ -25,6 +25,7 @@ file/
 /frontend/.vscode/
 /frontend/.idea/
 /frontend/.vs/
+/frontend/dist/
 **/__pycache__/
 /frontend/yarn-error.log
 /frontend/npm-debug.log
