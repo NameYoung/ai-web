@@ -5,26 +5,34 @@
         </v-alert>
         <div>
             <h2 class="text-left">
-                Datasets
+                Experiments
             </h2>
         </div>
         <v-row no-gutters style="height: 60px;">
             <v-col class="d-flex" cols="3">
-                <v-select :items="projects" item-value="id" item-text="name" label="Filter by Project"></v-select>
+                <v-select v-model="filterProjectId" :items="projects" item-value="id" item-text="name"
+                    label="Filter by Project" @change="filterExperiments" clearable
+                    @click:clear="clearProjectFilter"></v-select>
+            </v-col>
+            <v-divider class="mx-4" vertical></v-divider>
+            <v-col class="d-flex" cols="3">
+                <v-select v-model="filterDatasetId" :items="datasets" item-value="id" item-text="name"
+                    label="Filter by Experiment" @change="filterExperiments" clearable
+                    @click:clear="clearDatasetFilter"></v-select>
             </v-col>
 
             <v-col class="text-right">
-                <v-btn color="success" elevation="2" @click="createDataset">New Dataset</v-btn>
+                <v-btn color="success" elevation="2" @click="createExperiment">New Experiment</v-btn>
             </v-col>
         </v-row>
         <v-divider></v-divider>
-        <v-data-table height="600" :headers="headers" :items="projects" :items-per-page="15" class="elevation-2"
+        <v-data-table height="600" :headers="headers" :items="experiments" :items-per-page="15" class="elevation-2"
             no-data-text="No Data">
             <template v-slot:[`item.actions`]="{ item }">
-                <v-icon small class="mr-2" @click="editProject(item)">
+                <v-icon small class="mr-2" @click="editExperiment(item)">
                     mdi-pencil
                 </v-icon>
-                <v-icon small @click="deleteProject(item)">
+                <v-icon small @click="deleteExperiment(item)">
                     mdi-delete
                 </v-icon>
             </template>
@@ -52,16 +60,15 @@
 </template>
   
 <script>
-
 export default {
     data() {
         return {
-            dialogDelete: false,
-            deleteProjectId: null,
-            filters: [],
-            errorMessage: "",
             alert: false,
+            errorMessage: "",
+            dialogDelete: false,
             totalCount: 0,
+            filterProjectId: null,
+            filterDatasetId: null,
             headers: [
                 {
                     text: 'Id',
@@ -71,39 +78,51 @@ export default {
                 },
                 { text: 'Name', value: 'name' },
                 { text: 'Project', value: 'project.name' },
-                { text: 'Description', value: 'description' },
+                { text: 'Dataset', value: 'dataset.name' },
+                { text: 'F2 Score', value: 'predict_index.s2_score' },
                 { text: 'Create At', value: 'created_at' },
                 { text: 'Updated At', value: 'updated_at' },
                 { text: 'Action', value: 'actions', sortable: false }
             ],
             datasets: [],
-            projects: []
+            projects: [],
+            experiments:[],
+            deleteExperimentId: null,
         }
     },
     mounted() {
+        this.$data.filterProjectId = this.$route.params.projectId
+        this.$data.filterDatasetId = this.$route.params.datasetId
         this.getProjects()
+        this.getDatasets()
+        this.getExperiments()
     },
     methods: {
-        createDataset() {
+        createExperiment() {
             this.$router.push({
-                name: 'new-dataset'
+                name: 'new-experiment'
             })
         },
-        editProject(item) {
+        editExperiment(item) {
             this.$router.push({
-                name: 'edit-project',
+                name: 'edit-experiment',
                 params: item
             })
         },
-        deleteProject(item) {
-            this.deleteProjectId = item.id
+        deleteExperiment(item) {
+            this.deleteExperimentId = item.id;
             this.dialogDelete = true
         },
-        getDatasets() {
+        getExperiments() {
             let self = this;
-            this.$axios.get('/datasets')
+            this.$axios.get('/experiments', {
+                params: {
+                    project_id: self.filterProjectId,
+                    dataset_id: self.filterDatasetId
+                }
+            })
                 .then(function (response) {
-                    self.datasets = response.data;
+                    self.experiments = response.data;
                     self.totalCount = self.projects.length
                 })
                 .catch(function (error) {
@@ -111,6 +130,27 @@ export default {
                         self.alertMessage(error.response.data.detail)
                     }
                 })
+        },
+        getDatasets() {
+            let self = this;
+            this.$axios.get('/datasets')
+                .then(function (response) {
+                    self.datasets = response.data;
+                })
+                .catch(function (error) {
+                    if (error.response.data.detail) {
+                        self.alertMessage(error.response.data.detail)
+                    }
+                })
+        },
+        filterExperiments() {
+            this.getExperiments()
+        },
+        clearProjectFilter() {
+            this.filterProjectId = null;
+        },
+        clearDatasetFilter() {
+            this.filterDatasetId = null;
         },
         getProjects() {
             let self = this;
@@ -126,12 +166,11 @@ export default {
         },
         confirmDelete() {
             let self = this;
-            this.$axios.delete('/projects/' + self.deleteProjectId)
+            this.$axios.delete('/experiments/' + self.deleteExperimentId)
                 .then(function () {
 
                 })
                 .catch(function (error) {
-                    console.log(error)
                     if (error.response.data.detail) {
                         self.alertMessage(error.response.data.detail)
                     }
@@ -140,7 +179,7 @@ export default {
             this.$router.go()
         },
         cancelDelete() {
-            this.deleteProjectId = null
+            this.deleteExperimentId = null
             this.dialogDelete = false
         },
         alertMessage(message) {

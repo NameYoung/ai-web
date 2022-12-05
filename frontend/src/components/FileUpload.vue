@@ -1,15 +1,12 @@
 <template>
     <v-row>
         <v-col cols="6">
-            <v-file-input prepend-icon="" accept=".csv" :label="parentFileName" @change="selectFile"
+            <v-file-input accept=".csv" :label="parentFileName" @change="selectFile"
                 @click:clear="clearFile" outlined>
                 <template v-slot:append-outer>
                     <v-icon v-if="uploadSuccess" color="green">
                         mdi-checkbox-marked-circle
                     </v-icon>
-                    <v-btn color="grey lighten-2 black--text" @click="uploadFile">
-                        Upload
-                    </v-btn>
                 </template>
             </v-file-input>
             <v-alert dense outlined type="error" v-if="alert" dismissible>
@@ -28,16 +25,20 @@ export default {
             filename: null,
             fileData: [[]],
             uploadSuccess: false,
+            fileUploaded: true,
             errorMessage: null,
             alert: false,
         }
     },
     methods: {
         selectFile(file) {
+            this.uploadSuccess = false
             this.file = file
+            this.uploadFile()
         },
         uploadFile() {
             if (this.file === null) {
+                this.alertMessage("Must choosr a file")
                 return
             }
             var formData = new FormData();
@@ -55,7 +56,6 @@ export default {
                     self.$emit('uploadSuccess')
                 })
                 .catch(function (error) {
-                    console.log(error)
                     if (error.response.data.detail) {
                         self.alertMessage(error.response.data.detail)
                     }

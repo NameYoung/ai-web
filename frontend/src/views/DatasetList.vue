@@ -29,6 +29,14 @@
                     mdi-delete
                 </v-icon>
             </template>
+            <template v-slot:[`item.experiments`]="{ item }">
+                <v-chip>
+                    experiments
+                    <v-icon @click="redirectExperiments(item)">
+                        mdi-link
+                    </v-icon>
+                </v-chip>
+            </template>
         </v-data-table>
         <v-dialog v-model="dialogDelete" max-width="320">
             <v-card>
@@ -77,10 +85,10 @@ export default {
                 },
                 { text: 'Name', value: 'name' },
                 { text: 'Project', value: 'project.name' },
-                { text: "File", value: 'file_path'},
-                { text: 'Description', value: 'description' },
+                { text: "File", value: 'file_path' },
                 { text: 'Create At', value: 'created_at' },
                 { text: 'Updated At', value: 'updated_at' },
+                { text: 'Experiments', value: 'experiments', sortable: false },
                 { text: 'Action', value: 'actions', sortable: false }
             ],
             datasets: [],
@@ -107,6 +115,14 @@ export default {
         deleteDataset(item) {
             this.deleteDatasetId = item.id;
             this.dialogDelete = true
+        },
+        redirectExperiments(item) {
+            this.$router.push({
+                name: 'experiments',
+                params: {
+                    datasetId: item.id
+                }
+            })
         },
         getDatasets() {
             let self = this;

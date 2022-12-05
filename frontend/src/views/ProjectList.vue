@@ -44,7 +44,6 @@
             mdi-link
           </v-icon>
         </v-chip>
-
       </template>
     </v-data-table>
     <v-dialog v-model="dialogDelete" max-width="320">
@@ -116,7 +115,9 @@ export default {
     redirectExperiments(item) {
       this.$router.push({
         name: 'experiments',
-        params: item
+        params: {
+          projectId: item.id
+        }
       })
     },
     editProject(item) {

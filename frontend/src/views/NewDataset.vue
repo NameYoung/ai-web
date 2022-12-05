@@ -15,9 +15,6 @@
                             item-text="name" label="Project" :rules="projectRules" required outlined
                             @click="getProjects"></v-select>
 
-                        <v-textarea class="d-flex pa-6 overflow-auto" v-model="description" :rules="descriptionRules"
-                            :counter="255" label="Description" outlined></v-textarea>
-
                         <div class="d-flex pa-6 overflow-auto">
                             <FileUpload @uploadSuccess="updateFileData" ref="fileUpload"></FileUpload>
                         </div>
@@ -25,6 +22,9 @@
                         <v-card v-if="diagram" height="500" elevation="0" class="d-flex overflow-auto">
                             <v-chart ref="scatter" class="chart" :option="option" />
                         </v-card>
+
+                        <v-textarea class="d-flex pa-6 overflow-auto" v-model="description" :rules="descriptionRules"
+                            :counter="255" label="Description" outlined></v-textarea>
                     </v-form>
                     <v-spacer></v-spacer>
                     <v-card-actions class="justify-center">

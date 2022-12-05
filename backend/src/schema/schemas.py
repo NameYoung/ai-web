@@ -1,6 +1,7 @@
 from typing import List, Union
 
 from pydantic import BaseModel
+import decimal
 
 
 class ProjectBase(BaseModel):
@@ -119,6 +120,11 @@ class FitModelResult(BaseModel):
     predict_data: List[List[float]] = [[]]
     predict_index: ModelIndex
     model: ModelParam
+
+
+class FitModelCreate(BaseModel):
+    file_path: str
+    model_type: str = 'LinearRegression'
 
 
 class FileUpload(BaseModel):
