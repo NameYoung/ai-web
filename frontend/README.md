@@ -1,24 +1,23 @@
 # frontend
 
-## Project setup
+> web server for ai-web
+
+## Requirements
+
+- [NodeJS](https://nodejs.org/en/)
+- [VueJS](https://vuejs.org/)
+- [Vuerify](https://vuetifyjs.com/en/)
+
 ```
-yarn install
+> yarn install
+> yarn serve
 ```
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+### Web Portal
 
-### Compiles and minifies for production
-```
-yarn build
-```
+address: http://127.0.0.1:8080/docs
 
-### Lints and fixes files
-```
-yarn lint
-```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+

@@ -6,7 +6,7 @@ from fastapi import APIRouter
 from fastapi import HTTPException
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
-
+import os
 from schema import schemas
 
 router = APIRouter()
@@ -19,10 +19,15 @@ linear_type_str = 'LinearRegression'
 
 @router.post("/fit-model", response_model=schemas.FitModelResult)
 def fit_model(params: schemas.FitModelCreate):
+    base_path = os.path.abspath(".") + '/file/'
+
+    is_exist = os.path.exists(base_path)
+    if not is_exist:
+        os.makedirs(base_path)
     if params.model_type != 'LinearRegression':
         raise HTTPException(status_code=400, detail="Unsupported model type")
 
-    source_data = pd.read_csv('./file/' + params.file_path)
+    source_data = pd.read_csv(base_path + params.file_path)
     x_array = source_data[x_column_name]
     X = np.array(x_array).reshape(-1, 1)
     y = source_data[y_column_name]
