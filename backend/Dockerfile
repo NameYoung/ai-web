@@ -8,6 +8,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-RUN chmod 755 /app
-
 CMD ["/bin/bash", "-c", "cd ./src;python3 -m uvicorn main:app --host=0.0.0.0 --port=8000"]
