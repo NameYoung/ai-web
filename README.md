@@ -34,5 +34,5 @@
 
 ### Database Design
 
-![database](dataset.png)
+![database](database.png)
 
