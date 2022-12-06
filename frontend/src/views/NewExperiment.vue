@@ -30,6 +30,9 @@
                             <v-text-field v-model="r2Score" :rules="fitModelRules" required disabled
                                 outlined></v-text-field>
                         </v-card>
+                        <div class="pt-4 pl-6" v-if="showResultDiagram">
+                            <h4>Fit Result:</h4>
+                        </div>
                         <v-card v-if="showResultDiagram" height="500" elevation="0" class="d-flex overflow-auto">
                             <v-chart ref="resultChart" class="chart" :option="resultOption" />
                         </v-card>
@@ -213,10 +216,10 @@ export default {
             this.showResultDiagram = true
             this.resultOption.series[0].data = this.sourceData
             this.resultOption.series[1].data = this.predictData
-            if(this.$refs.resultChart){
+            if (this.$refs.resultChart) {
                 this.$refs.resultChart.chart.setOption(this.resultOption)
             }
-            
+
         },
         refreshSourceData(id) {
             this.showSourceDataDiagram = true
@@ -225,13 +228,13 @@ export default {
             this.projectId = sourceDataset.project_id
             this.sourceDataOption.series[0].data = sourceDataset.data
             this.fitModel(sourceDataset.file_path)
-            if(this.$refs.sourceDataChart){
+            if (this.$refs.sourceDataChart) {
                 this.$refs.sourceDataChart.chart.setOption(this.sourceDataOption)
             }
         },
-        clearDataset(){
+        clearDataset() {
             this.datasetId = null,
-            this.sourceData = null
+                this.sourceData = null
         },
         alertMessage(message) {
             if (message) {

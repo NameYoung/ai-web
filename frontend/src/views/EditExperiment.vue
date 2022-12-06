@@ -33,6 +33,10 @@
                             <v-text-field v-model="r2Score" :rules="fitModelRules" required disabled
                                 outlined></v-text-field>
                         </v-card>
+
+                        <div class="pt-4 pl-6" v-if="showResultDiagram">
+                            <h4>Fit Result:</h4>
+                        </div>
                         <v-card v-if="showResultDiagram" height="500" elevation="0" class="d-flex overflow-auto">
                             <v-chart ref="resultChart" class="chart" :option="resultOption" />
                         </v-card>
